@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{DBF22CE2-4C36-ED16-617E-2E9CD4CCCEEB}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "Battle_Tank",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
