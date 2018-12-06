@@ -15,6 +15,7 @@ class BATTLE_TANK_API ATank : public APawn
 public:
 	
 	void AimAt(FVector HitLocation);
+
 UFUNCTION(BlueprintCallable,Category = Setup)
 	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
 
@@ -34,4 +35,6 @@ private:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(EditAnywhere, Category = Firing)	//edit where you want,  create in the Frinig category in blueprint
+		float LunchSpeed = 100000; //TODO find Sensible starting value
 };
