@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "TankAimingComponent.generated.h"
 
 
@@ -28,7 +29,7 @@ public:
 
 	void AimAt(FVector HitLocation, float LunchSpeed);
 private: 
-	UStaticMeshComponent* Barrel = nullptr;
+	class UStaticMeshComponent* Barrel = nullptr;
 
 
 };
