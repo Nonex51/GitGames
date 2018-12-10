@@ -46,5 +46,5 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 UPROPERTY(EditAnywhere, Category = Firing)	//edit where you want,  create in the Frinig category in blueprint
-		float LaunchSpeed = 100000; //TODO find Sensible starting value
+		float LaunchSpeed = 4000; //TODO find Sensible starting value
 };
