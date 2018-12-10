@@ -2,7 +2,7 @@
 
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
-
+#include "TankTurret.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 
@@ -18,14 +18,22 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+	if (!BarrelToSet) { return; }
 	this->Barrel = BarrelToSet;
 }
 
-void UTankAimingComponent::AimAt(FVector HitLocation,float LaunchSpeed)
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+	if (!TurretToSet) { return; }
+	this->Turret = TurretToSet;
+}
+
+
+void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
 	if (!Barrel) { return; }
 
-	FVector OutLaunchVelocity(0);
+	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 	bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity
 	(
@@ -34,16 +42,27 @@ void UTankAimingComponent::AimAt(FVector HitLocation,float LaunchSpeed)
 		StartLocation,
 		HitLocation,
 		LaunchSpeed,
-		ESuggestProjVelocityTraceOption::DoNotTrace
-		);
-		if (bHaveAimSolution)
+		false,
+		0,
+		0,
+		ESuggestProjVelocityTraceOption::DoNotTrace // Paramater must be present to prevent bug
+		// TODO report bug
+	);
+
+	if (bHaveAimSolution)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
-		
 		MoveBarrelTowards(AimDirection);
-	}
-	//if no solution do nothing		UE_LOG(LogTemp, Warning, TEXT("not solution"));
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution found"), Time);
 	
+	}
+	else
+	{
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("%f: No aim solve found"), Time);
+	}
+	// If no solution found do nothing
 }
 
 
@@ -56,5 +75,6 @@ void  UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 	
 	Barrel->Elevate(DeltaRotator.Pitch);  
+	Turret->Rotate(DeltaRotator.Yaw);
 
 }
